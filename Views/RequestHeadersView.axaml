@@ -1,0 +1,23 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:plato.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="300"
+             x:Class="plato.Views.RequestHeadersView">
+
+    <DockPanel Margin="5">
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Spacing="10" Margin="0,0,0,10">
+            <Button Content="Add" Width="80" />
+            <Button Content="Remove" Width="80" />
+        </StackPanel>
+
+        <DataGrid AutoGenerateColumns="False" CanUserReorderColumns="True" CanUserResizeColumns="True">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Header" Width="*" />
+                <DataGridTextColumn Header="Value" Width="*" />
+                <DataGridCheckBoxColumn Header="Active" Width="60" />
+            </DataGrid.Columns>
+        </DataGrid>
+    </DockPanel>
+</UserControl> 

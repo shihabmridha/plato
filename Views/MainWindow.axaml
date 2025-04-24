@@ -1,0 +1,164 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:plato.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:views="using:plato.Views"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
+        MinWidth="1000" MinHeight="700"
+        x:Class="plato.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="Plato - REST API Client">
+
+    <Design.DataContext>
+        <vm:MainWindowViewModel />
+    </Design.DataContext>
+    
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.ThemeDictionaries>
+                <ResourceDictionary x:Key="Light">
+                    <SolidColorBrush x:Key="Background">#ffdddddd</SolidColorBrush>
+                </ResourceDictionary>
+               
+                <ResourceDictionary x:Key="Dark">
+                    <SolidColorBrush x:Key="Background">#ff333333</SolidColorBrush>
+                </ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
+        </ResourceDictionary>
+    </Window.Resources> 
+    
+    <Window.Styles>
+        <Style Selector="GridSplitter">
+            <Setter Property="Background" Value="{DynamicResource Background}"/>
+            <Setter Property="MinWidth" Value="3"/>
+        </Style>
+        
+        <Style Selector="TabControl">
+            <Setter Property="Margin" Value="0"/>
+            <Setter Property="Padding" Value="5"/>
+        </Style>
+        
+        <Style Selector="TextBox">
+            <Setter Property="Padding" Value="8,5"/>
+            <Setter Property="CornerRadius" Value="4"/>
+        </Style>
+        
+        <Style Selector="TreeView">
+            <Setter Property="Background" Value="Transparent"/>
+        </Style>
+        
+        <Style Selector="Button">
+            <Setter Property="Padding" Value="8,5"/>
+            <Setter Property="CornerRadius" Value="4"/>
+        </Style>
+    </Window.Styles>
+
+    <DockPanel>
+        <!-- Main Menu -->
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="Collection">
+                <MenuItem Header="New Collection"/>
+                <MenuItem Header="Import"/>
+                <MenuItem Header="Export"/>
+                <Separator/>
+                <MenuItem Header="Exit"/>
+            </MenuItem>
+            <MenuItem Header="Edit">
+                <MenuItem Header="Copy"/>
+                <MenuItem Header="Paste"/>
+                <MenuItem Header="Delete"/>
+            </MenuItem>
+            <MenuItem Header="Help">
+                <MenuItem Header="About"/>
+            </MenuItem>
+        </Menu>
+        
+        <!-- Main Content Grid -->
+        <Grid DockPanel.Dock="Bottom">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition MinWidth="200" Width="250"/>
+                <ColumnDefinition MinWidth="300" Width="*"/>
+                <ColumnDefinition MinWidth="200" Width="300"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Left Column - Tree Structure -->
+            <DockPanel Grid.Column="0" Margin="5">
+                <TextBlock DockPanel.Dock="Top" Text="Collections" FontWeight="Bold" Margin="0,0,0,5"/>
+                <TreeView ItemsSource="{Binding TreeItems}">
+                    <TreeView.ItemTemplate>
+                        <TreeDataTemplate ItemsSource="{Binding Children}">
+                            <StackPanel Orientation="Horizontal" Spacing="5">
+                                <PathIcon Data="{Binding IsFolder, Converter={StaticResource FolderIconConverter}}" 
+                                          Width="16" Height="16" />
+                                <TextBlock Text="{Binding Name}" />
+                            </StackPanel>
+                        </TreeDataTemplate>
+                    </TreeView.ItemTemplate>
+                </TreeView>
+            </DockPanel>
+
+            <!-- GridSplitter for resizing between left and middle columns -->
+            <GridSplitter Grid.Column="0" HorizontalAlignment="Right"/>
+
+            <!-- Middle Column -->
+            <Grid Grid.Column="1" Margin="5">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <!-- URL Input Field -->
+                <DockPanel Grid.Row="0">
+                    <ComboBox DockPanel.Dock="Left" SelectedIndex="0" Width="100" Margin="0,0,5,0">
+                        <ComboBoxItem>GET</ComboBoxItem>
+                        <ComboBoxItem>POST</ComboBoxItem>
+                        <ComboBoxItem>PUT</ComboBoxItem>
+                        <ComboBoxItem>DELETE</ComboBoxItem>
+                        <ComboBoxItem>PATCH</ComboBoxItem>
+                    </ComboBox>
+                    <Button DockPanel.Dock="Right" Content="Send" Margin="5,0,0,0" Width="80"/>
+                    <TextBox Text="{Binding Url}" Watermark="Enter URL..."/>
+                </DockPanel>
+
+                <!-- Tabs for Request Options -->
+                <TabControl Grid.Row="1" x:Name="RequestTabControl" SelectedIndex="0">
+                    <TabItem Header="Params">
+                        <views:RequestParamsView />
+                    </TabItem>
+                    <TabItem Header="Body">
+                        <views:RequestBodyView />
+                    </TabItem>
+                    <TabItem Header="Headers">
+                        <views:RequestHeadersView />
+                    </TabItem>
+                    <TabItem Header="Auth">
+                        <views:RequestAuthView />
+                    </TabItem>
+                </TabControl>
+            </Grid>
+
+            <!-- GridSplitter for resizing between middle and right columns -->
+            <GridSplitter Grid.Column="1" HorizontalAlignment="Right"/>
+
+            <!-- Right Column -->
+            <Grid Grid.Column="2" Margin="5">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <!-- Response Tabs -->
+                <TabControl Grid.Row="0" Grid.RowSpan="2" x:Name="ResponseTabControl" SelectedIndex="0">
+                    <TabItem Header="Response">
+                        <views:ResponseView />
+                    </TabItem>
+                    <TabItem Header="Headers">
+                        <views:ResponseHeadersView />
+                    </TabItem>
+                </TabControl>
+            </Grid>
+        </Grid>
+    </DockPanel>
+</Window>

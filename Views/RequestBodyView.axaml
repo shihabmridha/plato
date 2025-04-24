@@ -1,0 +1,22 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:plato.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="300"
+             x:Class="plato.Views.RequestBodyView">
+
+    <DockPanel Margin="5">
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Spacing="10" Margin="0,0,0,10">
+            <ComboBox Width="150" SelectedIndex="0">
+                <ComboBoxItem>None</ComboBoxItem>
+                <ComboBoxItem>JSON</ComboBoxItem>
+                <ComboBoxItem>XML</ComboBoxItem>
+                <ComboBoxItem>Form</ComboBoxItem>
+                <ComboBoxItem>Text</ComboBoxItem>
+            </ComboBox>
+        </StackPanel>
+
+        <TextBox AcceptsReturn="True" TextWrapping="Wrap" Padding="8" Watermark="Enter request body..." />
+    </DockPanel>
+</UserControl> 

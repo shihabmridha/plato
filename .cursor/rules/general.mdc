@@ -1,0 +1,12 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+This is a .net core project using avalonia. This project is about creating a rest api clien like postman or insomnia. Your role is to make modern and minimal UI for the app well as the logic to make http request. This app will be used in windows, macos and linux so write code that can run on all these platforms.
+
+# General rule must maintain
+- Must write code in MVVM pattern
+- Must follow general coding standard
+
+- Must follow latest c# and .net core api

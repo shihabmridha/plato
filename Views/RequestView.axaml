@@ -1,0 +1,233 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:plato.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="plato.Views.RequestView"
+             x:DataType="vm:RequestViewModel">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- URL Input and Method Selector -->
+        <DockPanel Grid.Row="0" Margin="0,5,0,10">
+            <ComboBox DockPanel.Dock="Left" 
+                      ItemsSource="{Binding HttpMethods}"
+                      SelectedItem="{Binding SelectedHttpMethod}" 
+                      Width="100" 
+                      Margin="0,0,5,0"/>
+            
+            <Button DockPanel.Dock="Right" 
+                    Content="Send" 
+                    Command="{Binding SendRequestCommand}"
+                    IsEnabled="{Binding !IsSending}"
+                    Margin="5,0,0,0" 
+                    Width="80"/>
+            
+            <TextBox Text="{Binding Url}" 
+                     Watermark="Enter URL..."/>
+        </DockPanel>
+
+        <!-- Request/Response Split -->
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*" MinHeight="100"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="1*" MinHeight="100"/>
+            </Grid.RowDefinitions>
+
+            <!-- Request Options -->
+            <TabControl Grid.Row="0">
+                <TabItem Header="Params">
+                    <Grid Margin="5">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        
+                        <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="10" Margin="0,0,0,10">
+                            <Button Content="Add" Command="{Binding AddQueryParamCommand}" Width="80" />
+                        </StackPanel>
+
+                        <DataGrid Grid.Row="1" 
+                                  ItemsSource="{Binding QueryParams}"
+                                  AutoGenerateColumns="False" 
+                                  CanUserReorderColumns="True" 
+                                  CanUserResizeColumns="True">
+                            <DataGrid.Columns>
+                                <DataGridCheckBoxColumn Header="Active" 
+                                                        Binding="{Binding IsEnabled}" 
+                                                        Width="60" />
+                                <DataGridTextColumn Header="Key" 
+                                                    Binding="{Binding Key}" 
+                                                    Width="*" />
+                                <DataGridTextColumn Header="Value" 
+                                                    Binding="{Binding Value}" 
+                                                    Width="*" />
+                                <DataGridTemplateColumn Width="60">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Button Content="✕" 
+                                                    Command="{Binding DataContext.RemoveQueryParamCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                                    CommandParameter="{Binding}"
+                                                    VerticalAlignment="Center"
+                                                    HorizontalAlignment="Center"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Grid>
+                </TabItem>
+                
+                <TabItem Header="Headers">
+                    <Grid Margin="5">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        
+                        <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="10" Margin="0,0,0,10">
+                            <Button Content="Add" Command="{Binding AddHeaderCommand}" Width="80" />
+                        </StackPanel>
+
+                        <DataGrid Grid.Row="1" 
+                                  ItemsSource="{Binding Headers}"
+                                  AutoGenerateColumns="False" 
+                                  CanUserReorderColumns="True" 
+                                  CanUserResizeColumns="True">
+                            <DataGrid.Columns>
+                                <DataGridCheckBoxColumn Header="Active" 
+                                                        Binding="{Binding IsEnabled}" 
+                                                        Width="60" />
+                                <DataGridTextColumn Header="Key" 
+                                                    Binding="{Binding Key}" 
+                                                    Width="*" />
+                                <DataGridTextColumn Header="Value" 
+                                                    Binding="{Binding Value}" 
+                                                    Width="*" />
+                                <DataGridTemplateColumn Width="60">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Button Content="✕" 
+                                                    Command="{Binding DataContext.RemoveHeaderCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                                    CommandParameter="{Binding}"
+                                                    VerticalAlignment="Center"
+                                                    HorizontalAlignment="Center"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Grid>
+                </TabItem>
+                
+                <TabItem Header="Body">
+                    <Grid Margin="5">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        
+                        <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="10" Margin="0,0,0,10">
+                            <TextBlock Text="Content-Type:" VerticalAlignment="Center"/>
+                            <ComboBox ItemsSource="{Binding ContentTypes}"
+                                      SelectedItem="{Binding RequestBodyContentType}" 
+                                      Width="200"
+                                      Margin="5,0,0,0"/>
+                        </StackPanel>
+
+                        <TextBox Grid.Row="1" 
+                                 Text="{Binding RequestBody}" 
+                                 FontFamily="Cascadia Code,Consolas,Menlo,Monospace"
+                                 AcceptsReturn="True"
+                                 AcceptsTab="True"
+                                 TextWrapping="NoWrap"/>
+                    </Grid>
+                </TabItem>
+                
+                <TabItem Header="Auth">
+                    <TextBlock Text="Authentication options coming soon..." 
+                               HorizontalAlignment="Center" 
+                               VerticalAlignment="Center"/>
+                </TabItem>
+            </TabControl>
+
+            <!-- GridSplitter between Request and Response -->
+            <GridSplitter Grid.Row="1" 
+                          Height="5" 
+                          HorizontalAlignment="Stretch" 
+                          VerticalAlignment="Center" 
+                          Background="#DDD"/>
+
+            <!-- Response -->
+            <Grid Grid.Row="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                
+                <!-- Response Status -->
+                <DockPanel Grid.Row="0" Margin="10,5">
+                    <TextBlock DockPanel.Dock="Left" 
+                               Text="{Binding StatusCode}" 
+                               FontWeight="Bold"
+                               IsVisible="{Binding ShowResponse}"
+                               Margin="0,0,10,0"/>
+                               
+                    <TextBlock DockPanel.Dock="Left" 
+                               Text="{Binding StatusMessage}" 
+                               IsVisible="{Binding ShowResponse}"
+                               Margin="0,0,10,0"/>
+                               
+                    <TextBlock DockPanel.Dock="Right" 
+                               Text="{Binding ResponseTime, StringFormat='{}{0} ms'}" 
+                               IsVisible="{Binding ShowResponse}"
+                               Margin="10,0,0,0"/>
+                                   
+                    <TextBlock Text="Response"
+                               HorizontalAlignment="Center"
+                               FontWeight="Bold"/>
+                </DockPanel>
+
+                <!-- Response Tabs -->
+                <TabControl Grid.Row="1">
+                    <TabItem Header="Body">
+                        <TextBox Text="{Binding ResponseBody}" 
+                                 IsReadOnly="True"
+                                 FontFamily="Cascadia Code,Consolas,Menlo,Monospace"
+                                 TextWrapping="NoWrap"/>
+                    </TabItem>
+                    
+                    <TabItem Header="Headers">
+                        <TextBlock Text="Response headers coming soon..." 
+                                   HorizontalAlignment="Center" 
+                                   VerticalAlignment="Center"/>
+                    </TabItem>
+                </TabControl>
+                
+                <!-- Loading Overlay -->
+                <Border Grid.Row="1" 
+                        Background="#88000000" 
+                        IsVisible="{Binding IsSending}"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch">
+                    <StackPanel HorizontalAlignment="Center" 
+                                VerticalAlignment="Center">
+                        <ProgressBar IsIndeterminate="True" 
+                                     Width="200"
+                                     Height="4"
+                                     Margin="0,0,0,10"/>
+                        <TextBlock Text="Sending request..." 
+                                   Foreground="White" 
+                                   HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </Grid>
+    </Grid>
+</UserControl> 

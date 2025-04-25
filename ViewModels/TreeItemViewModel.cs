@@ -8,11 +8,13 @@ public class TreeItemViewModel : ViewModelBase
     private bool _isExpanded;
     private bool _isSelected;
     private bool _isFolder;
+    private string _itemId;
     private ObservableCollection<TreeItemViewModel> _children;
 
     public TreeItemViewModel()
     {
         _name = string.Empty;
+        _itemId = string.Empty;
         _children = new ObservableCollection<TreeItemViewModel>();
     }
 
@@ -38,6 +40,12 @@ public class TreeItemViewModel : ViewModelBase
     {
         get => _isFolder;
         set => this.RaiseAndSetIfChanged(ref _isFolder, value);
+    }
+    
+    public string ItemId
+    {
+        get => _itemId;
+        set => this.RaiseAndSetIfChanged(ref _itemId, value);
     }
 
     public ObservableCollection<TreeItemViewModel> Children

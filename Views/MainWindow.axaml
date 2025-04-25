@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:views="using:plato.Views"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
+        mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="800"
         MinWidth="1000" MinHeight="700"
         x:Class="plato.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
@@ -53,6 +53,12 @@
             <Setter Property="Padding" Value="8,5"/>
             <Setter Property="CornerRadius" Value="4"/>
         </Style>
+
+        <!-- Tab style with close button -->
+        <Style Selector="TabItem">
+            <Setter Property="Padding" Value="10,5"/>
+            <Setter Property="MinWidth" Value="120"/>
+        </Style>
     </Window.Styles>
 
     <DockPanel>
@@ -75,23 +81,32 @@
             </MenuItem>
         </Menu>
         
-        <!-- Main Content Grid -->
+        <!-- Main Content Grid - 2 columns layout -->
         <Grid DockPanel.Dock="Bottom">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition MinWidth="200" Width="250"/>
-                <ColumnDefinition MinWidth="300" Width="*"/>
-                <ColumnDefinition MinWidth="200" Width="300"/>
+                <ColumnDefinition Width="1*" MinWidth="200" MaxWidth="400"/>
+                <ColumnDefinition Width="3*" MinWidth="600"/>
             </Grid.ColumnDefinitions>
 
-            <!-- Left Column - Tree Structure -->
+            <!-- Left Column - Tree Structure (Collections) -->
             <DockPanel Grid.Column="0" Margin="5">
-                <TextBlock DockPanel.Dock="Top" Text="Collections" FontWeight="Bold" Margin="0,0,0,5"/>
-                <TreeView ItemsSource="{Binding TreeItems}">
+                <StackPanel DockPanel.Dock="Top" Margin="0,0,0,10" Spacing="5">
+                    <TextBlock Text="Collections" FontWeight="Bold"/>
+                    <Button Content="New Collection" HorizontalAlignment="Left" />
+                </StackPanel>
+                
+                <TreeView x:Name="CollectionsTreeView" 
+                         ItemsSource="{Binding TreeItems}" 
+                         SelectedItem="{Binding SelectedTreeItem, Mode=TwoWay}">
                     <TreeView.ItemTemplate>
                         <TreeDataTemplate ItemsSource="{Binding Children}">
-                            <StackPanel Orientation="Horizontal" Spacing="5">
-                                <PathIcon Data="{Binding IsFolder, Converter={StaticResource FolderIconConverter}}" 
-                                          Width="16" Height="16" />
+                            <StackPanel Orientation="Horizontal" Spacing="5" DoubleTapped="TreeItem_DoubleTapped">
+                                <PathIcon Data="{StaticResource FolderIconGeometry}" 
+                                          Width="16" Height="16" 
+                                          IsVisible="{Binding IsFolder}" />
+                                <PathIcon Data="{StaticResource FileIconGeometry}" 
+                                          Width="16" Height="16" 
+                                          IsVisible="{Binding !IsFolder}" />
                                 <TextBlock Text="{Binding Name}" />
                             </StackPanel>
                         </TreeDataTemplate>
@@ -99,65 +114,57 @@
                 </TreeView>
             </DockPanel>
 
-            <!-- GridSplitter for resizing between left and middle columns -->
+            <!-- GridSplitter for resizing between left and right columns -->
             <GridSplitter Grid.Column="0" HorizontalAlignment="Right"/>
 
-            <!-- Middle Column -->
-            <Grid Grid.Column="1" Margin="5">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
-
-                <!-- URL Input Field -->
-                <DockPanel Grid.Row="0">
-                    <ComboBox DockPanel.Dock="Left" SelectedIndex="0" Width="100" Margin="0,0,5,0">
-                        <ComboBoxItem>GET</ComboBoxItem>
-                        <ComboBoxItem>POST</ComboBoxItem>
-                        <ComboBoxItem>PUT</ComboBoxItem>
-                        <ComboBoxItem>DELETE</ComboBoxItem>
-                        <ComboBoxItem>PATCH</ComboBoxItem>
-                    </ComboBox>
-                    <Button DockPanel.Dock="Right" Content="Send" Margin="5,0,0,0" Width="80"/>
-                    <TextBox Text="{Binding Url}" Watermark="Enter URL..."/>
-                </DockPanel>
-
-                <!-- Tabs for Request Options -->
-                <TabControl Grid.Row="1" x:Name="RequestTabControl" SelectedIndex="0">
-                    <TabItem Header="Params">
-                        <views:RequestParamsView />
-                    </TabItem>
-                    <TabItem Header="Body">
-                        <views:RequestBodyView />
-                    </TabItem>
-                    <TabItem Header="Headers">
-                        <views:RequestHeadersView />
-                    </TabItem>
-                    <TabItem Header="Auth">
-                        <views:RequestAuthView />
-                    </TabItem>
+            <!-- Right Column - Request tabs -->
+            <Grid Grid.Column="1">
+                <TabControl x:Name="RequestsTabControl" 
+                            ItemsSource="{Binding OpenRequests}"
+                            SelectedItem="{Binding ActiveRequest}">
+                    <TabControl.ItemTemplate>
+                        <DataTemplate>
+                            <DockPanel>
+                                <Button DockPanel.Dock="Right" 
+                                        Content="✕" 
+                                        Padding="4,1" 
+                                        Margin="5,0,0,0" 
+                                        VerticalAlignment="Center" 
+                                        Background="Transparent" 
+                                        CornerRadius="10"
+                                        Command="{Binding DataContext.CloseRequestCommand, 
+                                                  RelativeSource={RelativeSource AncestorType=TabControl}}"
+                                        CommandParameter="{Binding}"/>
+                                <TextBlock Text="{Binding Url}" 
+                                           MaxWidth="200"
+                                           TextTrimming="CharacterEllipsis"
+                                           VerticalAlignment="Center"/>
+                            </DockPanel>
+                        </DataTemplate>
+                    </TabControl.ItemTemplate>
+                    <TabControl.ContentTemplate>
+                        <DataTemplate>
+                            <views:RequestView DataContext="{Binding}" />
+                        </DataTemplate>
+                    </TabControl.ContentTemplate>
+                    
+                    <TabControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal"/>
+                        </ItemsPanelTemplate>
+                    </TabControl.ItemsPanel>
                 </TabControl>
-            </Grid>
-
-            <!-- GridSplitter for resizing between middle and right columns -->
-            <GridSplitter Grid.Column="1" HorizontalAlignment="Right"/>
-
-            <!-- Right Column -->
-            <Grid Grid.Column="2" Margin="5">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
-
-                <!-- Response Tabs -->
-                <TabControl Grid.Row="0" Grid.RowSpan="2" x:Name="ResponseTabControl" SelectedIndex="0">
-                    <TabItem Header="Response">
-                        <views:ResponseView />
-                    </TabItem>
-                    <TabItem Header="Headers">
-                        <views:ResponseHeadersView />
-                    </TabItem>
-                </TabControl>
+                
+                <!-- New Tab Button -->
+                <Button Content="+" 
+                        Command="{Binding NewRequestCommand}"
+                        VerticalAlignment="Top"
+                        HorizontalAlignment="Right"
+                        Margin="0,5,5,0"
+                        Padding="8,0"
+                        CornerRadius="10"
+                        Background="Transparent"
+                        BorderThickness="1"/>
             </Grid>
         </Grid>
     </DockPanel>

@@ -12,6 +12,20 @@
     <Application.Resources>
         <converters:FolderIconConverter x:Key="FolderIconConverter"/>
         <converters:StringEqualsConverter x:Key="StringEqualsConverter"/>
+        <ResourceDictionary>
+            <!-- Folder Icon (M-path) -->
+            <StreamGeometry x:Key="FolderIconGeometry">M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z</StreamGeometry>
+            
+            <!-- File Icon (M-path) -->
+            <StreamGeometry x:Key="FileIconGeometry">M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm-2 16c-2.05 0-3.81-1.24-4.58-3h1.71c.63.9 1.68 1.5 2.87 1.5 1.93 0 3.5-1.57 3.5-3.5S13.93 8.5 12 8.5c-1.35 0-2.52.78-3.1 1.9l1.6 1.6h-4V8l1.3 1.3C8.69 8.05 10.23 7 12 7c2.76 0 5 2.24 5 5s-2.24 5-5 5z</StreamGeometry>
+            
+            <!-- HTTP Method Colors -->
+            <SolidColorBrush x:Key="GetMethodColor" Color="#61AFFE"/>
+            <SolidColorBrush x:Key="PostMethodColor" Color="#49CC90"/>
+            <SolidColorBrush x:Key="PutMethodColor" Color="#FCA130"/>
+            <SolidColorBrush x:Key="DeleteMethodColor" Color="#F93E3E"/>
+            <SolidColorBrush x:Key="PatchMethodColor" Color="#50E3C2"/>
+        </ResourceDictionary>
     </Application.Resources>
 
     <Application.Styles>

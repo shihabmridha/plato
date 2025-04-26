@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Net.Http;
 using System.Reactive;
 using System.Threading.Tasks;
@@ -226,7 +227,7 @@ namespace plato.ViewModels
             QueryParams.Add(new KeyValuePair { Key = "", Value = "", IsEnabled = true });
         }
 
-        private void RemoveQueryParam(KeyValuePair param)
+        public void RemoveQueryParam(KeyValuePair param)
         {
             QueryParams.Remove(param);
         }
@@ -236,7 +237,7 @@ namespace plato.ViewModels
             Headers.Add(new KeyValuePair { Key = "", Value = "", IsEnabled = true });
         }
 
-        private void RemoveHeader(KeyValuePair header)
+        public void RemoveHeader(KeyValuePair header)
         {
             Headers.Remove(header);
         }

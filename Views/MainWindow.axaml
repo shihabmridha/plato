@@ -8,6 +8,7 @@
         MinWidth="1000" MinHeight="700"
         x:Class="plato.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
+        x:CompileBindings="True"
         Icon="/Assets/avalonia-logo.ico"
         Title="Plato - REST API Client">
 
@@ -123,7 +124,7 @@
                             ItemsSource="{Binding OpenRequests}"
                             SelectedItem="{Binding ActiveRequest}">
                     <TabControl.ItemTemplate>
-                        <DataTemplate>
+                        <DataTemplate x:DataType="vm:RequestViewModel">
                             <DockPanel>
                                 <Button DockPanel.Dock="Right" 
                                         Content="✕" 
@@ -132,8 +133,6 @@
                                         VerticalAlignment="Center" 
                                         Background="Transparent" 
                                         CornerRadius="10"
-                                        Command="{Binding DataContext.CloseRequestCommand, 
-                                                  RelativeSource={RelativeSource AncestorType=TabControl}}"
                                         CommandParameter="{Binding}"/>
                                 <TextBlock Text="{Binding Url}" 
                                            MaxWidth="200"

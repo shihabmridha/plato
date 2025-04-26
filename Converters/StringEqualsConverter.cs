@@ -8,12 +8,12 @@ namespace plato.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is string stringValue && parameter is string expectedValue)
+            if (value == null || parameter == null)
             {
-                return string.Equals(stringValue, expectedValue, StringComparison.OrdinalIgnoreCase);
+                return false;
             }
-            
-            return false;
+
+            return value.ToString().Equals(parameter.ToString(), StringComparison.OrdinalIgnoreCase);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

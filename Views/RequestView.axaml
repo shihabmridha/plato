@@ -5,7 +5,8 @@
              xmlns:vm="using:plato.ViewModels"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="plato.Views.RequestView"
-             x:DataType="vm:RequestViewModel">
+             x:DataType="vm:RequestViewModel"
+             x:CompileBindings="True">
 
     <Grid>
         <Grid.RowDefinitions>
@@ -57,7 +58,8 @@
                                   ItemsSource="{Binding QueryParams}"
                                   AutoGenerateColumns="False" 
                                   CanUserReorderColumns="True" 
-                                  CanUserResizeColumns="True">
+                                  CanUserResizeColumns="True"
+                                  Name="QueryParamsGrid">
                             <DataGrid.Columns>
                                 <DataGridCheckBoxColumn Header="Active" 
                                                         Binding="{Binding IsEnabled}" 
@@ -70,9 +72,8 @@
                                                     Width="*" />
                                 <DataGridTemplateColumn Width="60">
                                     <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
+                                        <DataTemplate x:DataType="vm:KeyValuePair">
                                             <Button Content="✕" 
-                                                    Command="{Binding DataContext.RemoveQueryParamCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
                                                     CommandParameter="{Binding}"
                                                     VerticalAlignment="Center"
                                                     HorizontalAlignment="Center"/>
@@ -99,7 +100,8 @@
                                   ItemsSource="{Binding Headers}"
                                   AutoGenerateColumns="False" 
                                   CanUserReorderColumns="True" 
-                                  CanUserResizeColumns="True">
+                                  CanUserResizeColumns="True"
+                                  Name="HeadersGrid">
                             <DataGrid.Columns>
                                 <DataGridCheckBoxColumn Header="Active" 
                                                         Binding="{Binding IsEnabled}" 
@@ -112,9 +114,8 @@
                                                     Width="*" />
                                 <DataGridTemplateColumn Width="60">
                                     <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
+                                        <DataTemplate x:DataType="vm:KeyValuePair">
                                             <Button Content="✕" 
-                                                    Command="{Binding DataContext.RemoveHeaderCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
                                                     CommandParameter="{Binding}"
                                                     VerticalAlignment="Center"
                                                     HorizontalAlignment="Center"/>

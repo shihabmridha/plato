@@ -174,7 +174,7 @@ public class MainWindowViewModel : ViewModelBase
         ActiveRequest = request;
     }
     
-    private void CloseRequest(RequestViewModel request)
+    public void CloseRequest(RequestViewModel request)
     {
         if (OpenRequests.Contains(request))
         {
@@ -285,5 +285,16 @@ public class MainWindowViewModel : ViewModelBase
             
             treeItems.Add(treeItem);
         }
+    }
+}
+
+// Extension method for Task
+public static class TaskExtensions
+{
+    public static void FireAndForget(this Task task)
+    {
+        // We don't need to do anything with the task, just let it run
+        // This is a simple fire-and-forget pattern
+        // In a real application, you might want to add exception handling
     }
 }

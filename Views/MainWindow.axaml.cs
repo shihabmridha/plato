@@ -8,26 +8,27 @@ using System;
 using plato.ViewModels;
 using Avalonia.Input;
 using Avalonia.Markup.Xaml;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace plato.Views;
 
 public partial class MainWindow : Window
 {
-    private TreeView? CollectionsTreeView;
-    private TabControl? RequestsTabControl;
-
     public MainWindow()
     {
         InitializeComponent();
-        DataContext = new MainWindowViewModel();
+        DataContext = App.ServiceProvider.GetRequiredService<MainWindowViewModel>();
         
-        CollectionsTreeView = this.FindControl<TreeView>("CollectionsTreeView");
-        RequestsTabControl = this.FindControl<TabControl>("RequestsTabControl");
-
         // Subscribe to tree item double-click
         if (CollectionsTreeView != null)
         {
             CollectionsTreeView.DoubleTapped += TreeItem_DoubleTapped;
+        }
+        
+        // Subscribe to tab close button clicks
+        if (RequestsTabControl != null)
+        {
+            RequestsTabControl.AddHandler(Button.ClickEvent, TabCloseButton_Click, handledEventsToo: true);
         }
     }
 
@@ -36,7 +37,7 @@ public partial class MainWindow : Window
         AvaloniaXamlLoader.Load(this);
     }
 
-    private void TreeItem_DoubleTapped(object sender, TappedEventArgs e)
+    private void TreeItem_DoubleTapped(object? sender, TappedEventArgs e)
     {
         // Get the TreeItemViewModel that was double-tapped
         if (sender is StackPanel panel && panel.DataContext is TreeItemViewModel treeItem)
@@ -121,5 +122,16 @@ public partial class MainWindow : Window
         
         // Select the new tab
         RequestsTabControl.SelectedIndex = lastIndex;
+    }
+
+    private void TabCloseButton_Click(object? sender, RoutedEventArgs e)
+    {
+        if (e.Source is Button button && 
+            button.CommandParameter is RequestViewModel request && 
+            DataContext is MainWindowViewModel viewModel)
+        {
+            viewModel.CloseRequest(request);
+            e.Handled = true;
+        }
     }
 }

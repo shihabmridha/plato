@@ -11,7 +11,7 @@ namespace plato;
 
 public partial class App : Application
 {
-    public static IServiceProvider ServiceProvider { get; private set; }
+    public static IServiceProvider ServiceProvider { get; private set; } = null!;
 
     public override void Initialize()
     {
